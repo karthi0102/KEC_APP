@@ -8,6 +8,8 @@ import VerifyOTP from '../../components/VerifyOTP';
 import ForgetPassword from '../../components/ForgetPassword/ForgetPassword';
 import CircularPreview from '../CircularPreview';
 import DeptCircular from '../DeptCircular';
+import SuccessPage from '../../components/SuccessPage';
+import Loading from '../Loading';
 const Stack = createNativeStackNavigator();
 const AppNavigation = () => {
  
@@ -21,6 +23,8 @@ const AppNavigation = () => {
                 <Stack.Screen name="VerifyOtp" component={VerifyOTP} />
                 <Stack.Screen name='Forget' component={ForgetPassword} />
                 <Stack.Screen name ='Dept' component={DeptCircular}/>
+                <Stack.Screen name="Success" component={SuccessPage}/>
+                <Stack.Screen name="Loading" component={Loading} />
       </Stack.Navigator>
     </NavigationContainer>
   );

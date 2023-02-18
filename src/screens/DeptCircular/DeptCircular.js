@@ -1,12 +1,13 @@
-import { View, Text,StyleSheet, FlatList,SectionList, ActivityIndicator } from 'react-native'
+import { View, Text,StyleSheet, FlatList,SectionList, ActivityIndicator,Image,TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useDispatch,useSelector } from 'react-redux'
 import CustomButton from '../../components/CustomButton'
 import CircularCard from '../../components/CircularCard'
 import { getAllCircular } from '../../actions/circular'
-import Icon  from 'react-native-vector-icons/MaterialIcons'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { deleteDeviceId } from '../../actions/auth'
+import { setToggle } from '../../actions/toggle'
+import SideBar from '../../components/SideBar'
+import Icon  from 'react-native-vector-icons/Entypo'
+import image from '../../../assets/images/logo.png'
 
 const Item = ({ data,navigation }) => {
   return(
@@ -27,7 +28,7 @@ const DeptCircular = ({navigation}) => {
   const [yesterdayCircular,setYesterdayCircular] = useState()
   const [ earlierCircular,setEarlierCircular] = useState()
   const [monthWiseCircular,setMonthWiseCircular]=useState()
-  const User = useSelector((state)=>(state.currentUserReducer))
+
   const setToday = () =>{
     isToday(true)
     isYesterday(false)
@@ -43,17 +44,10 @@ const DeptCircular = ({navigation}) => {
     isYesterday(false)
     isEarlier(true)
   }
-  const handleLogout =async()=>{
-    const id=User?.result?._id
-    console.log(id)
-    dispatch(deleteDeviceId({id},navigation))
-  }
-  const handleNavigate = ()=>{
-    navigation.replace('Circular')
-  }
+
   useEffect(()=>{
       if(Circulars.data!=null){
-        console.log('hii',Circulars.data)
+  
         const data = Circulars.data
         setTodayCircular(data.todayCircular)
         setYesterdayCircular(data.yesterdayCircular)
@@ -75,21 +69,24 @@ const DeptCircular = ({navigation}) => {
   useEffect(()=>{
     dispatch(getAllCircular())
   },[dispatch])
+
+  const handleToggle = (data)=>{
+      dispatch(setToggle(data))
+  }
   
   return (
     <View style={styles.container}>
+      <SideBar navigation={navigation} />
        <View style={styles.header}>
-        <View style={styles.profile}>
-              <Icon name="account-circle" color="#3F72AF" size={30}/>
-              <Text style={styles.title}>{User?.result?.name}</Text>
-        </View>
-        <View style={styles.navigateButton}>
-              <CustomButton type='logout' onPress={handleLogout} text='Logout'  />
-        </View>
+          <View style={styles.profile}>
+                <Image source={image} style={styles.logo} />
+            <Text style={styles.brand}>Kec Circular</Text>
         </View>
         <View>
-            <CustomButton  type='logout' onPress={handleNavigate} text='View All Circular'  />
+            <TouchableOpacity onPress={()=>handleToggle(true)} ><Icon name="menu" size={32} color={"#112D4E"} /></TouchableOpacity>
         </View>
+        </View>
+        
         <View style={styles.buttons}>
           <CustomButton text='Today'  onPress={setToday}   type={today ?'selected':'normal'} />
           <CustomButton text='Yesterday' onPress={setYesterday} type={yesterday ?'selected':'normal'} />
@@ -138,6 +135,17 @@ const styles= StyleSheet.create({
     container:{
         flex:1
     },
+    logo:{
+      height:60,
+      objectFit:'cover',
+      width:60,
+      margin:10,
+    },
+    brand:{
+      color:"#112D4E",
+      fontSize:32,
+      fontWeight:'bold'
+    },
     ctitle:{
       fontSize: 32,
       backgroundColor: "#fff"
@@ -146,7 +154,8 @@ const styles= StyleSheet.create({
       flexDirection:"row",
       justifyContent:"space-between",
       alignItems:"center",
-      margin:10
+      padding:10,
+      gap:10
     },  
     buttons:{
         flexDirection:"row",

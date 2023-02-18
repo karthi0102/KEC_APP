@@ -17,7 +17,7 @@ const Register = ({navigation}) => {
     useEffect(()=>{
       getDeviceId()
     },[])
-
+   
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [rollno, setRollNo] = useState('');

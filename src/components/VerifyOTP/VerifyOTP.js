@@ -23,11 +23,7 @@ function VerifyOTP({route, navigation}) {
     dispatch(
       signup({name, email, rollno, department, batch, password,deviceId,type},navigation),
     );
-    if(User?.result==null){
-      navigation.navigate('Circular')
-    }else{
-      navigation.navigate('Auth')
-    }
+   
   };
 
   return (

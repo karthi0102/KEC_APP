@@ -6,6 +6,63 @@ import { getAllCircular } from '../../actions/circular'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { setCurrentUser } from '../../actions/currentUser'
 import { getdeptAllCircular } from '../../actions/dept'
+import { setAlert } from '../../actions/alert'
+
+
+const Home = ({navigation}) => {
+    const dispatch=useDispatch()
+    const setToken =async()=>{
+        let data=await AsyncStorage.getItem('KEC')
+        if(data){        
+            dispatch(setCurrentUser(JSON.parse(data)))
+            dispatch(getAllCircular())
+            dispatch(getdeptAllCircular())
+            const {name}=JSON.parse(data).result
+            dispatch(setAlert(`Welcome ${name}`))
+            
+            navigation.replace('Circular')        
+        }else{
+            navigation.replace('Auth')
+            dispatch(setAlert("Login to continue"))
+        }
+    }
+    useEffect(()=>{
+        setToken()
+    },[])
+
+
+  return (
+    <View style={styles.container}>
+        <View style={styles.imageContainer}>
+                <Image source={logo} style={styles.image}/>
+      </View>
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+    container:{
+        flex:1,
+        justifyContent:"center",
+    },
+    imageContainer:{
+        justifyContent:"center",
+        alignItems:"center",
+        marginBottom:20,
+    },
+    image:{
+        justifyContent:'center',
+        alignItems:"center",
+    },
+    progress:{
+        padding:40
+    }
+})
+
+export default Home
+
+
+
 // const Progess = ({step,steps,height}) =>{
 //     const [width,setWidth]=useState(0)
 //     const animatedValue = React.useRef(new Animated.Value(-1000)).current;
@@ -50,11 +107,7 @@ import { getdeptAllCircular } from '../../actions/dept'
 // }
 // AsyncStorage.removeItem('KEC')
 
-const Home = ({navigation}) => {
-    const dispatch=useDispatch()
-    const [index,stepIndex]=useState(0)
-    const User = useSelector((state) => (state.currentUserReducer))
-    // useEffect(()=>{
+ // useEffect(()=>{
     //     const interval = setInterval(()=>{
     //         if(index<10){
     //             stepIndex((index+1)%(10+1))
@@ -72,62 +125,7 @@ const Home = ({navigation}) => {
     
     //     }
     // },[index])
-    
 
-    const setToken =async()=>{
-        const data=await AsyncStorage.getItem('KEC')
-        if(data){
-                dispatch(setCurrentUser(JSON.parse(data)))
-                dispatch(getAllCircular())
-                dispatch(getdeptAllCircular())
-                navigation.replace('Circular')
-        }else{
-                 navigation.replace('Auth')
-        }
-
-
-    }
-
-
-
-
-    
-useEffect(()=>{
-    setToken()
-})
-
-
-   
-  return (
-    <View style={styles.container}>
-        <View style={styles.imageContainer}>
-                <Image source={logo} style={styles.image}/>
-      </View>
-      {/* <View style={styles.progress}>
+    {/* <View style={styles.progress}>
              <Progess step={index} steps={10} height={16} />
       </View> */}
-    </View>
-  )
-}
-
-const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        justifyContent:"center",
-    },
-    imageContainer:{
-        justifyContent:"center",
-        alignItems:"center",
-        marginBottom:20,
-    },
-    image:{
-        justifyContent:'center',
-        alignItems:"center",
-    },
-    progress:{
-        padding:40
-    }
-})
-
-export default Home
-

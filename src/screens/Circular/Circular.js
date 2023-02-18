@@ -1,12 +1,13 @@
-import { View, Text,StyleSheet, FlatList,SectionList, ActivityIndicator } from 'react-native'
+import { View, Text,StyleSheet,TouchableOpacity, FlatList,SectionList, ActivityIndicator,Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useDispatch,useSelector } from 'react-redux'
 import CustomButton from '../../components/CustomButton'
 import CircularCard from '../../components/CircularCard'
 import { getAllCircular } from '../../actions/circular'
-import Icon  from 'react-native-vector-icons/MaterialIcons'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { deleteDeviceId } from '../../actions/auth'
+import Icon  from 'react-native-vector-icons/Entypo'
+import { setToggle } from '../../actions/toggle'
+import image from '../../../assets/images/logo.png'
+import SideBar from '../../components/SideBar'
 const Item = ({ data,navigation }) => {
   return(
   <View style={styles.item}>
@@ -17,15 +18,17 @@ const Item = ({ data,navigation }) => {
 
 
 const Circular = ({navigation}) => {
+   
   const [dis,setDis]=useState(false)
   const [today,isToday]=useState(true)
   const [yesterday,isYesterday]=useState(false)
   const [earlier,isEarlier]=useState(false)
   const dispatch=useDispatch()
+  
   const Circulars = useSelector((state) =>(state.circularReducer))
   const [todayCircular,setTodayCircular] = useState()
   const [yesterdayCircular,setYesterdayCircular] = useState()
-  const [ earlierCircular,setEarlierCircular] = useState()
+  const [earlierCircular,setEarlierCircular] = useState()
   const [monthWiseCircular,setMonthWiseCircular]=useState()
   const User = useSelector((state)=>(state.currentUserReducer))
   const setToday = () =>{
@@ -44,16 +47,9 @@ const Circular = ({navigation}) => {
     isYesterday(false)
     isEarlier(true)
   }
-  const handleLogout =async()=>{
-    const id=User?.result?._id
-    console.log(id)
-    dispatch(deleteDeviceId({id},navigation))
-  }
 
-  const handleNavigate = ()=>{
-    navigation.replace('Dept')
-  }
 
+ 
   useEffect(()=>{
       if(Circulars.data!=null){
         const data = Circulars.data
@@ -63,7 +59,6 @@ const Circular = ({navigation}) => {
         const month = data.monthwise
         let fullData=[];
         for(let i of month){
-          
           if(i.data.length){
             fullData.push(i)
           }
@@ -77,21 +72,24 @@ const Circular = ({navigation}) => {
   useEffect(()=>{
     dispatch(getAllCircular())
   },[dispatch])
-  
+
+  const handleToggle = (data)=>{
+    dispatch(setToggle(data))
+  }
+
   return (
     <View style={styles.container}>
+      <SideBar navigation={navigation} />
        <View style={styles.header}>
         <View style={styles.profile}>
-              <Icon name="account-circle" color="#3F72AF" size={30}/>
-              <Text style={styles.title}>{User?.result?.name}</Text>
+                <Image source={image} style={styles.logo} />
+            <Text style={styles.brand}>Kec Circular</Text>
         </View>
         <View>
-              <CustomButton type='logout' onPress={handleLogout} text='Logout'  />
+            <TouchableOpacity onPress={()=>handleToggle(true)} ><Icon name="menu" size={32} color={"#112D4E"} /></TouchableOpacity>
         </View>
         </View>
-        <View style={styles.navigateButton}>
-              <CustomButton type='logout' onPress={handleNavigate} text='View Dept Circulars'  />
-        </View>
+    
         <View style={styles.buttons}>
           <CustomButton text='Today'  onPress={setToday}   type={today ?'selected':'normal'} />
           <CustomButton text='Yesterday' onPress={setYesterday} type={yesterday ?'selected':'normal'} />
@@ -140,6 +138,17 @@ const styles= StyleSheet.create({
     container:{
         flex:1
     },
+    logo:{
+      height:60,
+      objectFit:'cover',
+      width:60,
+      margin:10,
+    },
+    brand:{
+      color:"#112D4E",
+      fontSize:32,
+      fontWeight:'bold'
+    },
     ctitle:{
       fontSize: 32,
       backgroundColor: "#fff"
@@ -148,7 +157,8 @@ const styles= StyleSheet.create({
       flexDirection:"row",
       justifyContent:"space-between",
       alignItems:"center",
-      margin:10
+      padding:10,
+      gap:10
     },  
     buttons:{
         flexDirection:"row",

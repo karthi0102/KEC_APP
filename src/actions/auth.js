@@ -2,20 +2,24 @@ import * as api from '../api'
 import AsyncStorage  from '@react-native-async-storage/async-storage'
 import { setCurrentUser } from './currentUser'
 import { Alert } from 'react-native'
+import { setAlert } from './alert'
+import { setLoading } from './loading'
+
 export const login = (authData,navigation) => async(dispatch) =>{
     
     try {
-        console.log(authData)
+         dispatch(setLoading(true))
         const {data} = await api.login(authData)
-        console.log(data,"hello")
         dispatch({type:'SET_USER',payload:data})
         const result = await AsyncStorage.getItem('KEC')
+        dispatch(setAlert("Login Successsfull"))
         dispatch(setCurrentUser(JSON.parse(result)))
+        dispatch(setLoading(false))
         navigation.replace('Circular')
         
     } catch (err) {
-            console.log(err)
-            Alert.alert(err.message)
+            dispatch(setLoading(false))
+            dispatch(setAlert("Invalid Credentials"))
     }
 }
 
@@ -26,7 +30,7 @@ export const signup =(authData,navigation) =>async(dispatch) =>{
             dispatch({type:'SET_USER',payload:data})
             const result = await AsyncStorage.getItem('KEC')
             dispatch(setCurrentUser(JSON.parse(result)))
-            navigation.replace('Circular')
+            navigation.replace('Success')
     } catch (err) {
         Alert.alert(err.message)
     }
@@ -34,9 +38,9 @@ export const signup =(authData,navigation) =>async(dispatch) =>{
 
 export const sendOtp = (otpData) => async(dispatch) =>{
     try {
-        console.log(otpData)
+      
         const {data}=await api.sendOtp(otpData)
-        console.log(data,"in otp")
+     
     } catch (error) {
         Alert.alert(error.message)
     }
@@ -44,8 +48,10 @@ export const sendOtp = (otpData) => async(dispatch) =>{
 
 export const forget = (email,navigation)=> async(dispatch)=>{
     try{
+       
         const {data}=await api.ForgetPassword(email)
         Alert.alert('Link send to your email')
+     
         navigation.replace('Auth')
     }catch(err){
         Alert.alert(err.message)
@@ -54,9 +60,12 @@ export const forget = (email,navigation)=> async(dispatch)=>{
 
 export const deleteDeviceId = (id,navigation) => async(dispatch)=>{
     try {
+        dispatch(setLoading(true))
         const {data}=await api.deleteDeviceId(id)
         AsyncStorage.removeItem('KEC')
         dispatch(setCurrentUser(null))
+        dispatch(setAlert("Logout Successfull"))
+        dispatch(setLoading(false))
         navigation.replace('Auth')
     } catch (error) {
         Alert.alert(error.message)

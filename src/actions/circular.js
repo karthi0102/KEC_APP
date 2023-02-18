@@ -11,9 +11,9 @@ export const getAllCircular =() => async(dispatch) =>{
                 batch:User?.result?.batch,
                 type:User?.result?.type
             }
-            console.log()
+         
             const {data}=await  api.getAllCirculars(circularData)
-            console.log("called",data)
+          
             dispatch({type:"FETCH_ALL_CIRCULARS",payload:data})
             
     } catch (err) {

@@ -9,8 +9,7 @@ import Icon  from 'react-native-vector-icons/MaterialIcons'
 export default function CircularPreview({route}) {
 
         const {item}=route.params;
-    
-        const source = { uri: `https://kec-circular.herokuapp.com/${item.filePath}`, cache: true };
+        const source = { uri: `https://keccircular.onrender.com/${item.filePath}`, cache: true };
         console.log(source.uri);
         const actualDownload = () => {
             // const { dirs } = RNFetchBlob.fs;
@@ -27,7 +26,7 @@ export default function CircularPreview({route}) {
              path: `${dirs.DownloadDir}/${item.title}.pdf`,
              }, 
            })
-             .fetch('GET',`https://kec-circular.herokuapp.com/${item.filePath}`, {})
+             .fetch('GET',`https://keccircular.onrender.com/${item.filePath}`, {})
              .then((res) => {
                console.log('The file saved to ', res.path());
              })
