@@ -6,7 +6,7 @@ import CustomButton from '../../components/CustomButton';
 import CustomDropdown from '../CustomDropdown';
 import { sendOtp } from '../../actions/auth';
 import OneSignal from 'react-native-onesignal';
-
+import { setAlert } from '../../actions/alert';
 const Register = ({navigation}) => {
   const [deviceId,setDeviceID]=useState('')
       const getDeviceId =async()=>{
@@ -68,26 +68,27 @@ const Register = ({navigation}) => {
         setDis(false)
       }
   },[email])
+
     const preHandleSubmit = ()=>{
       if(!name.length){
-        Alert.alert('Enter Your Name')
+       dispatch(setAlert("Enter your name"))
         return
       }
       if(dis){
         let email_pattern=/^([a-z]+)\.([0-9]{2})([a-z]{2,5})\@([a-z]+)\.([a-z]{2,5})$/;
         let result1=email_pattern.test(email)
         if(!result1 &&!email.endsWith('kongu.edu') ){
-          Alert.alert('Email Invalid')
+          dispatch(setAlert('Email Invalid'))
           return
         }
           let roll_no_pattern = /^([0-9]{2})([A-Z]{3,4})([0-9]{3,4})$/
           let rollResult = roll_no_pattern.test(rollno)
           if(!rollResult){
-            Alert.alert('Roll Number Incorrect')
+            dispatch(setAlert('Roll Number Incorrect'))
             return
           }
           if(!batch){
-          Alert.alert('Please Select Your batch')
+          dispatch(setAlert('Please Select Your batch'))
           return
         }
       }
@@ -95,22 +96,22 @@ const Register = ({navigation}) => {
         let femail_pattern=/^([a-z]+)\.([a-z]{2,5})\@([a-z]+)\.([a-z]{2,5})$/;
          let result1=femail_pattern.test(email)
         if(!result1 &&!email.endsWith('kongu.edu') ){
-          Alert.alert('Email Invalid')
+          dispatch(setAlert('Email Invalid'))
           return
         }
       }
      
       if(!department){
-        Alert.alert('Please select your department')
+        dispatch(setAlert('Please select your department'))
         return
       }
     
       if(password.length < 6){
-        Alert.alert('Password length must be greater than 6')
+        dispatch(setAlert('Password length must be greater than 6'))
         return
       }
       if(password!=confirmPassword){
-        Alert.alert('Password doesn\'t match ')
+        dispatch(setAlert('Password doesn\'t match '))
         return
       }
       sendToVerifyOtp()
@@ -126,6 +127,7 @@ const Register = ({navigation}) => {
       }else{
         type='Faculty'
       }
+      dispatch(setAlert("Sending Otp"));
       dispatch(sendOtp({otp,email}))
       
       navigation.navigate("VerifyOtp",{name,email,rollno,department,batch,password,otp,deviceId,type})

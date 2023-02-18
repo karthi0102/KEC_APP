@@ -28,7 +28,8 @@ const styles=StyleSheet.create({
        padding:12,
        backgroundColor:"#112D4E",
        margin:10,
-       borderRadius:6
+       borderRadius:6,
+       marginHorizontal:10
     },
     text:{
         color:"white",

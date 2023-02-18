@@ -1,5 +1,6 @@
 import * as api from '../api'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { setAlert } from './alert'
 export const getdeptAllCircular =() => async(dispatch) =>{
     try {
 
@@ -15,7 +16,7 @@ export const getdeptAllCircular =() => async(dispatch) =>{
             dispatch({type:"FETCH_ALL_DEPT_CIRCULARS",payload:data})
             
     } catch (err) {
-        console.log(err.message)
+        dispatch(setAlert("Server Down"))
     }
 }
 

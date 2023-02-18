@@ -5,6 +5,7 @@ import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { login } from '../../actions/auth';
 import OneSignal from 'react-native-onesignal';
+import { setAlert } from '../../actions/alert';
 const Login = ({navigation}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -19,8 +20,24 @@ const Login = ({navigation}) => {
       getDeviceId()
     },[])
     const handleSubmit = () =>{
+      if(email.length==0){
+        dispatch(setAlert("Email is required"))
+        return;
+      }
+      if(password.length==0){
+        dispatch(setAlert("Password is required"))
+        return
+      }
+      if(!email.includes("@kongu.edu")){
+        dispatch(setAlert("Invalid Email"))
+        return
+      }
+      if(password.length<6){
+        dispatch(setAlert("Password length must be greater than 6"))
+        return;
+      }
+       
       dispatch(login({email,password,deviceId},navigation))
-    //navigation.navigate('Circular')
     }
     const handleForget = () =>{
       navigation.navigate('Forget')

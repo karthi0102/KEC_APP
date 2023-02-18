@@ -26,35 +26,42 @@ export const login = (authData,navigation) => async(dispatch) =>{
 
 export const signup =(authData,navigation) =>async(dispatch) =>{
     try {
+            dispatch(setLoading(true))
             const {data} = await api.signup(authData);
             dispatch({type:'SET_USER',payload:data})
             const result = await AsyncStorage.getItem('KEC')
             dispatch(setCurrentUser(JSON.parse(result)))
+            dispatch(setLoading(false))
+            dispatch(setAlert("New User Created"))
             navigation.replace('Success')
     } catch (err) {
-        Alert.alert(err.message)
+       dispatch(setLoading(false))
+       dispatch(setAlert("User not Created"))
     }
 }
 
 export const sendOtp = (otpData) => async(dispatch) =>{
     try {
-      
-        const {data}=await api.sendOtp(otpData)
-     
+        dispatch(setLoading(true))
+        await api.sendOtp(otpData)
+        dispatch(setLoading(false))
+        dispatch(setAlert("Sent Otp to your Email"))
     } catch (error) {
-        Alert.alert(error.message)
+        dispatch(setLoading(false))
+        dispatch(setAlert("Otp not Sent"))
     }
 }
 
 export const forget = (email,navigation)=> async(dispatch)=>{
     try{
-       
-        const {data}=await api.ForgetPassword(email)
-        Alert.alert('Link send to your email')
-     
+       dispatch(setLoading(true))
+        await api.ForgetPassword(email)
+       dispatch(setAlert('Link send to your email'))
+        dispatch(setLoading(false))
         navigation.replace('Auth')
     }catch(err){
-        Alert.alert(err.message)
+        dispatch(setLoading(false))
+        dispatch(setAlert("Try after some time"))
     }
 }
 
@@ -68,6 +75,7 @@ export const deleteDeviceId = (id,navigation) => async(dispatch)=>{
         dispatch(setLoading(false))
         navigation.replace('Auth')
     } catch (error) {
-        Alert.alert(error.message)
+    dispatch(setLoading(false))
+       dispatch(setAlert("Logout Error"))
     }
 }
