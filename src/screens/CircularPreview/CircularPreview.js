@@ -5,9 +5,7 @@ import RNFetchBlob from 'rn-fetch-blob'
 import Icon  from 'react-native-vector-icons/MaterialIcons'
 
 
-
 export default function CircularPreview({route}) {
-
         const {item}=route.params;
         const source = { uri: `https://keccircular.onrender.com/${item.filePath}`, cache: true };
         console.log(source.uri);
@@ -23,7 +21,7 @@ export default function CircularPreview({route}) {
              notification: true,
              mediaScannable: true,
              title: `${item.title}.pdf`,
-             path: `${dirs.DownloadDir}/${item.title}.pdf`,
+             path: `${dirs.DownloadDir}/kec_circular/${item.title}.pdf`,
              }, 
            })
              .fetch('GET',`https://keccircular.onrender.com/${item.filePath}`, {})

@@ -3,7 +3,7 @@ const deptReducer = (state={data:null},action) =>{
         case "FETCH_ALL_DEPT_CIRCULARS":
             return {...state,data:action.payload}
         default:
-            return state
+            return {...state}
     }
 }
 

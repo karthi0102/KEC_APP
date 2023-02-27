@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch,useSelector } from 'react-redux'
 import CustomButton from '../../components/CustomButton'
 import CircularCard from '../../components/CircularCard'
-import { getAllCircular } from '../../actions/circular'
+import { getdeptAllCircular } from '../../actions/dept'
 import { setToggle } from '../../actions/toggle'
 import SideBar from '../../components/SideBar'
 import Icon  from 'react-native-vector-icons/Entypo'
@@ -67,7 +67,7 @@ const DeptCircular = ({navigation}) => {
  
 
   useEffect(()=>{
-    dispatch(getAllCircular())
+    dispatch(getdeptAllCircular())
   },[dispatch])
 
   const handleToggle = (data)=>{
@@ -96,21 +96,18 @@ const DeptCircular = ({navigation}) => {
           {!dis && <ActivityIndicator /> }
           {today && 
             <FlatList
-             data={todayCircular}
+              data={todayCircular}
               keyExtractor={item => item._id} 
               renderItem={({item}) => <CircularCard item={item} navigation={navigation} />} 
             />
-            
            }
-        
              {yesterday &&        
                 <FlatList 
-                  data={yesterdayCircular}
-                   keyExtractor={item => item._id}
+                    data={yesterdayCircular}
+                    keyExtractor={item => item._id}
                     renderItem={({item}) => <CircularCard item={item} navigation={navigation} />}
-                    />
-             } 
-                  
+                />
+             }   
              {/* {earlier &&           
              <FlatList 
               data={earlierCircular} 
@@ -125,7 +122,7 @@ const DeptCircular = ({navigation}) => {
                             renderSectionHeader={({ section: { title} }) => (
                                 <Text style={styles.Sectiontitle}>{title }</Text>
                          )}
-    />}
+            />}
         </View>
     </View>
   )
